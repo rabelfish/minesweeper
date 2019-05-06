@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="title" conetnt="Minesweeper" />
+    <meta name="description" content="Play Minesweeper" />
+    <meta name="author" content="Rachel Fisher" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- Fontawesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+      crossorigin="anonymous"
+    />
+
+    <!-- My CSS-->
+    <link rel="stylesheet" type="text/css" media="screen" href="./main.css" />
+
+    <!-- #GOOGLE FONT -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700" />
+  </head>
+
+  <body>
+    <div id="main" class="main" role="main">
+      <!-- MAIN CONTENT -->
+      <div id="content" class="container">
+        <div>
+          <h1 class="page-title txt-color-blueDark" id="page-title"><i class="fa fa-fw fa-gamepad"></i> MINESWEEPER</h1>
+        </div>
+        <div id="minesweeper">
+          <table>
+            <div id="minesweeper_header">
+              <div class="row">
+                <div class="col-xs-4">
+                  <p id="minesweeper_mines_left">{{ mines_left }}</p>
+                </div>
+                <div class="col-xs-4" id="minesweeper_faces">
+                  <i v-if="face == 'smile'" id="minesweeper_smile" class="fas fa-smile fa-3x"></i>
+                  <i v-if="face == 'frown'" id="minesweeper_frown" class="fas fa-frown fa-3x" @click="reset"></i>
+                  <i v-if="face == 'grin'" id="minesweeper_grin" class="fas fa-grin-beam fa-3x" @click="reset"></i>
+                </div>
+                <!--<div class="col-xs-4" id="minesweeper_timer">!-->
+                <!--    <p>{{ timer }}</p>!-->
+                <!--</div>!-->
+              </div>
+            </div>
+            <tr v-for="(row, x) in board_size" :key="x">
+              <td
+                v-for="(col, y) in board_size"
+                :key="y"
+                class="minesweeper_box"
+                :id="'ind_' + x + '_' + y"
+                @click="display_box(x,y)"
+                @contextmenu.prevent="display_flag(x, y)"
+              >
+                <i v-if="show_mines && mine_map[x*board_size+y] == -1" class="fas fa-certificate"></i>
+                <!--<span v-if="revealed_map[x*board_size+y] == 1 && mine_map[x*board_size+y] != 0" class="minesweeper_number"!-->
+                <span
+                  class="minesweeper_number"
+                  :class="{ minesweeper_blue: mine_map[x*board_size+y] == 1,
+                                minesweeper_green: mine_map[x*board_size+y] == 2,
+                                minesweeper_red: mine_map[x*board_size+y] == 3,
+                                minesweeper_yellow: mine_map[x*board_size+y] == 4,
+                                minesweeper_purple: mine_map[x*board_size+y] == 5,
+                                minesweeper_orange: mine_map[x*board_size+y] == 6,
+                                minesweeper_brown: mine_map[x*board_size+y] == 7,
+                                minesweeper_black: mine_map[x*board_size+y] == 8,}"
+                >
+                  {{ mine_map[x * board_size + y] }}
+                </span>
+                <i v-if="revealed_map[x*board_size+y] == -1 && !show_mines" class="fas fa-flag"></i>
+                <i
+                  v-if="revealed_map[x*board_size+y] == -1 && show_mines && mine_map[x*board_size+y] != -1"
+                  class="fas fa-certificate"
+                ></i>
+              </td>
+            </tr>
+          </table>
+
+          <br />
+          <div style="display:none;">
+            <label>Enter a positive integer less than 51: </label>
+            <input id="minesweeper_board_size" v-model="new_board_size" />
+            <button type="button" @click="changeBoardSize">Change Board Size</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--================================================== -->
+
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/core.js"></script>
+
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- My JS -->
+    <script src="./main.js"></script>
+  </body>
+</html>
