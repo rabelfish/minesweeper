@@ -1,6 +1,5 @@
 var minesweeper = new Vue({
   el: "#minesweeper",
-  delimiters: ["[[", "]]"],
   data: {
     board_size: 20,
     new_board_size: 20, // change board size to this, mapped to the input
@@ -8,10 +7,17 @@ var minesweeper = new Vue({
     mines_left: 0, // the mine counter (actually is the flag counter)
     mine_map: [],
     revealed_map: [],
-    show_mines: 1,
+    show_mines: 0,
     face: "smile",
     timer: 0,
-    interval: null
+    interval: null,
+    difficulties: {
+      easy: 6,
+      medium: 5,
+      hard: 4,
+      master: 3
+    },
+    difficulty: "easy"
   },
   methods: {
     display_box: function(x, y) {
@@ -104,24 +110,24 @@ var minesweeper = new Vue({
       // check all neighbors and add up the number of bombs
       // top and bottom
       var count =
-        (this.mine_map[(x - 1) * this.board_size + y] == -1 ? 1 : 0) +
-        (this.mine_map[(x + 1) * this.board_size + y] == -1 ? 1 : 0);
+        (this.mine_map[(x - 1) * this.board_size + y] === -1 ? 1 : 0) +
+        (this.mine_map[(x + 1) * this.board_size + y] === -1 ? 1 : 0);
 
       // the three on the right if it is not on the right edge
       if (y + 1 < this.board_size) {
         count =
           count +
-          (this.mine_map[x * this.board_size + (y + 1)] == -1 ? 1 : 0) +
-          (this.mine_map[(x - 1) * this.board_size + (y + 1)] == -1 ? 1 : 0) +
-          (this.mine_map[(x + 1) * this.board_size + (y + 1)] == -1 ? 1 : 0);
+          (this.mine_map[x * this.board_size + (y + 1)] === -1 ? 1 : 0) +
+          (this.mine_map[(x - 1) * this.board_size + (y + 1)] === -1 ? 1 : 0) +
+          (this.mine_map[(x + 1) * this.board_size + (y + 1)] === -1 ? 1 : 0);
       }
       // the three on the left if it is not on the left edge
       if (y - 1 >= 0) {
         count =
           count +
-          (this.mine_map[(x - 1) * this.board_size + (y - 1)] == -1 ? 1 : 0) +
-          (this.mine_map[x * this.board_size + (y - 1)] == -1 ? 1 : 0) +
-          (this.mine_map[(x + 1) * this.board_size + (y - 1)] == -1 ? 1 : 0);
+          (this.mine_map[(x - 1) * this.board_size + (y - 1)] === -1 ? 1 : 0) +
+          (this.mine_map[x * this.board_size + (y - 1)] === -1 ? 1 : 0) +
+          (this.mine_map[(x + 1) * this.board_size + (y - 1)] === -1 ? 1 : 0);
       }
 
       return count;
@@ -159,16 +165,16 @@ var minesweeper = new Vue({
       // number of boxes
       var boxes = this.board_size * this.board_size;
 
-      // set the header size to 20 * the board size because each block is 20 px
-      document.getElementById("minesweeper_header").style.width = this.board_size * 20 + 2 + "px";
+      // set the header size to 30 * the board size because each block is 30 px
+      document.getElementById("minesweeper_header").style.width = this.board_size * 30 + 2 + "px";
 
-      // creates and array of numbers from 0 to the number of boxes
+      // creates an array of numbers from 0 to the number of boxes
       var nums = Array.apply(null, { length: boxes }).map(Number.call, Number);
 
       var ranNums = [];
 
       // the number of mines
-      var mines = Math.floor(boxes / 6);
+      var mines = Math.floor(boxes / this.difficulties[this.difficulty]);
       this.mines_left = mines;
       this.non_mines = boxes - mines;
 

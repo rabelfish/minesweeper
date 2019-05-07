@@ -15,6 +15,9 @@
       crossorigin="anonymous"
     />
 
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
     <!-- My CSS-->
     <link rel="stylesheet" type="text/css" media="screen" href="./main.css" />
 
@@ -27,21 +30,40 @@
       <!-- MAIN CONTENT -->
       <div id="content" class="container">
         <div>
-          <h1 class="page-title txt-color-blueDark" id="page-title"><i class="fa fa-fw fa-gamepad"></i> MINESWEEPER</h1>
+          <h1 class="page-title txt-color-blueDark" id="page-title">
+            <i class="fa fa-fw fa-gamepad"></i>
+            <span> MINESWEEPER </span>
+            <span class="dropdown">
+              <i
+                class="fa fa-fw fa-cog"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+              </i>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </span>
+          </h1>
         </div>
         <div id="minesweeper">
           <table>
             <div id="minesweeper_header">
               <div class="row">
-                <div class="col-xs-4">
+                <div class="col-4">
                   <p id="minesweeper_mines_left">{{ mines_left }}</p>
                 </div>
-                <div class="col-xs-4" id="minesweeper_faces">
+                <div class="col-4" id="minesweeper_faces">
                   <i v-if="face == 'smile'" id="minesweeper_smile" class="fas fa-smile fa-3x"></i>
                   <i v-if="face == 'frown'" id="minesweeper_frown" class="fas fa-frown fa-3x" @click="reset"></i>
                   <i v-if="face == 'grin'" id="minesweeper_grin" class="fas fa-grin-beam fa-3x" @click="reset"></i>
                 </div>
-                <!--<div class="col-xs-4" id="minesweeper_timer">!-->
+                <!--<div class="col-4" id="minesweeper_timer">!-->
                 <!--    <p>{{ timer }}</p>!-->
                 <!--</div>!-->
               </div>
@@ -56,10 +78,13 @@
                 @contextmenu.prevent="display_flag(x, y)"
               >
                 <i v-if="show_mines && mine_map[x*board_size+y] == -1" class="fas fa-certificate"></i>
-                <!--<span v-if="revealed_map[x*board_size+y] == 1 && mine_map[x*board_size+y] != 0" class="minesweeper_number"!-->
                 <span
+                  v-if="revealed_map[x*board_size+y] == 1 && mine_map[x*board_size+y] != 0"
                   class="minesweeper_number"
-                  :class="{ minesweeper_blue: mine_map[x*board_size+y] == 1,
+                >
+                  <span
+                    class="minesweeper_number"
+                    :class="{ minesweeper_blue: mine_map[x*board_size+y] == 1,
                                 minesweeper_green: mine_map[x*board_size+y] == 2,
                                 minesweeper_red: mine_map[x*board_size+y] == 3,
                                 minesweeper_yellow: mine_map[x*board_size+y] == 4,
@@ -67,8 +92,9 @@
                                 minesweeper_orange: mine_map[x*board_size+y] == 6,
                                 minesweeper_brown: mine_map[x*board_size+y] == 7,
                                 minesweeper_black: mine_map[x*board_size+y] == 8,}"
-                >
-                  {{ mine_map[x * board_size + y] }}
+                  >
+                    {{ mine_map[x * board_size + y] }}
+                  </span>
                 </span>
                 <i v-if="revealed_map[x*board_size+y] == -1 && !show_mines" class="fas fa-flag"></i>
                 <i
@@ -81,7 +107,7 @@
 
           <br />
           <div style="display:none;">
-            <label>Enter a positive integer less than 51: </label>
+            <label>Enter a positive integer no greater than 50: </label>
             <input id="minesweeper_board_size" v-model="new_board_size" />
             <button type="button" @click="changeBoardSize">Change Board Size</button>
           </div>
@@ -90,11 +116,11 @@
     </div>
     <!--================================================== -->
 
-    <!-- JQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/core.js"></script>
-
     <!-- Vue -->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- Boostrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <!-- My JS -->
     <script src="./main.js"></script>

@@ -1,5 +1,5 @@
 #minesweeper_header {
-  height: 50px;
+  height: 55px;
   border: 2px solid black;
   background-color: silver;
   width: 0px;
@@ -18,8 +18,8 @@
 }
 
 .minesweeper_box {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border: 1px solid black;
   background-color: silver;
   box-shadow: 0 0 1px 1px #666;
