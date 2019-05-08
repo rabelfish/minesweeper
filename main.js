@@ -9,7 +9,7 @@ var minesweeper = new Vue({
     revealed_map: [],
     show_mines: 0,
     face: "smile",
-    timer: 0,
+    timer: null,
     interval: null,
     difficulties: {
       easy: 6,
@@ -20,9 +20,18 @@ var minesweeper = new Vue({
     difficulty: "easy",
     new_difficulty: "easy"
   },
+  computed: {
+    formatted_timer() {
+      let minutes = Math.floor(this.timer/60);
+      let seconds = this.timer - minutes*60;
+      if (minutes < 10) minutes = "0" + minutes;
+      if (seconds < 10) seconds = "0" + seconds;
+      return minutes + ":" + seconds;
+    }
+  },
   methods: {
     display_box: function(x, y) {
-      if (this.timer == 0) {
+      if (this.interval === null) {
         this.startTimer();
       }
 
@@ -37,10 +46,11 @@ var minesweeper = new Vue({
 
         // if we find a mine, put game into losing state
         if (this.mine_map[index] == -1) {
+          clearInterval(this.interval);
+          this.interval = null;
           document.getElementById("ind_" + x + "_" + y).style.color = "red";
           this.show_mines = 1;
           this.face = "frown";
-          clearInterval(this.interval);
         } else {
           // if it is not a mine, change the color and mark it as revealed
           document.getElementById("ind_" + x + "_" + y).style["background-color"] = "#f0f0f0";
@@ -51,9 +61,10 @@ var minesweeper = new Vue({
           // decrease the amount of non_mine boxes that the player has revealed. If it is all of them, the player won!
           this.non_mines = this.non_mines - 1;
           if (this.non_mines == 0) {
+            clearInterval(this.interval);
+            this.interval = null;
             this.show_mines = 1;
             this.face = "grin";
-            clearInterval(this.interval);
           }
 
           // if the box clicked was a zero, reveal it's neighbors
@@ -84,7 +95,7 @@ var minesweeper = new Vue({
         return;
       }
 
-      if (this.timer == 0) {
+      if (this.interval === null) {
         this.startTimer();
       }
 
@@ -138,6 +149,7 @@ var minesweeper = new Vue({
       return count;
     },
     startTimer() {
+      clearInterval(this.interval);
       this.interval = setInterval(
         function() {
           this.timer = this.timer + 1;
@@ -156,6 +168,7 @@ var minesweeper = new Vue({
       this.show_mines = 0;
       this.face = "smile";
       this.timer = 0;
+      clearInterval(this.interval);
       this.interval = null;
 
       let els = document.getElementsByClassName("box");

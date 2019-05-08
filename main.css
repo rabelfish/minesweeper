@@ -23,6 +23,10 @@ body {
   background-color: black;
   border-radius: 50%;
   border: 1px solid black;
+  box-shadow: 0 0 3px 1px #000;
+  height: 46px;
+  width: 45px;
+  margin-top: 2px;
 }
 
 .box {
@@ -37,6 +41,13 @@ body {
 
 #mines_left {
   position: absolute;
+  margin: 4px;
+  padding: 6px 8px;
+  color: red;
+  background-color: black;
+  font-weight: bold;
+  font-size: 20px;
+  box-shadow: 0 0 0px 1px #666;
 }
 
 #faces {
@@ -44,7 +55,15 @@ body {
 }
 
 #timer {
-  text-align: right;
+  position: absolute;
+  right: 16px;
+  margin: 4px;
+  padding: 6px 8px;
+  color: red;
+  background-color: black;
+  font-weight: bold;
+  font-size: 20px;
+  box-shadow: 0 0 0px 1px #666;
 }
 
 .cross_out {
