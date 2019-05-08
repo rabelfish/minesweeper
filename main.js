@@ -17,7 +17,8 @@ var minesweeper = new Vue({
       hard: 4,
       master: 3
     },
-    difficulty: "easy"
+    difficulty: "easy",
+    new_difficulty: "easy"
   },
   methods: {
     display_box: function(x, y) {
@@ -43,7 +44,7 @@ var minesweeper = new Vue({
         } else {
           // if it is not a mine, change the color and mark it as revealed
           document.getElementById("ind_" + x + "_" + y).style["background-color"] = "#f0f0f0";
-          var map = this.revealed_map.slice(0);
+          let map = this.revealed_map.slice(0);
           map[index] = 1;
           this.revealed_map = map;
 
@@ -79,13 +80,17 @@ var minesweeper = new Vue({
       }
     },
     display_flag: function(x, y) {
+      if (this.show_mines) {
+        return;
+      }
+
       if (this.timer == 0) {
         this.startTimer();
       }
 
       // make a copy of the revealed map since we are going to update it
-      var map = this.revealed_map.slice(0);
-      var index = x * this.board_size + y;
+      let map = this.revealed_map.slice(0);
+      let index = x * this.board_size + y;
 
       // if there is a flag, remove the flag
       if (this.revealed_map[index] == -1) {
@@ -109,7 +114,7 @@ var minesweeper = new Vue({
 
       // check all neighbors and add up the number of bombs
       // top and bottom
-      var count =
+      let count =
         (this.mine_map[(x - 1) * this.board_size + y] === -1 ? 1 : 0) +
         (this.mine_map[(x + 1) * this.board_size + y] === -1 ? 1 : 0);
 
@@ -132,7 +137,7 @@ var minesweeper = new Vue({
 
       return count;
     },
-    startTimer: function() {
+    startTimer() {
       this.interval = setInterval(
         function() {
           this.timer = this.timer + 1;
@@ -140,20 +145,22 @@ var minesweeper = new Vue({
         1000
       );
     },
-    changeBoardSize: function() {
-      this.board_size = this.new_board_size <= 50 ? this.new_board_size : 50;
-      this.initBoard();
+    save_settings() {
+      this.board_size = parseInt(this.new_board_size);
+      this.difficulty = this.new_difficulty;
+
+      this.reset();
     },
-    reset: function() {
+    reset() {
       // clear everything out
       this.show_mines = 0;
       this.face = "smile";
       this.timer = 0;
       this.interval = null;
 
-      var els = document.getElementsByClassName("minesweeper_box");
+      let els = document.getElementsByClassName("box");
 
-      for (var e = 0; e < els.length; e++) {
+      for (let e = 0; e < els.length; e++) {
         els[e].style.color = "black";
         els[e].style["background-color"] = "silver";
       }
@@ -161,25 +168,30 @@ var minesweeper = new Vue({
       // re-initialize the board
       this.initBoard();
     },
-    initBoard: function() {
-      // number of boxes
-      var boxes = this.board_size * this.board_size;
+    initBoard() {
+      this.show_mines = 0;
+      this.face = "smile";
+      this.timer = 0;
+      this.interval = null;
 
-      // set the header size to 30 * the board size because each block is 30 px
-      document.getElementById("minesweeper_header").style.width = this.board_size * 30 + 2 + "px";
+      // number of boxes
+      let boxes = this.board_size * this.board_size;
+
+      // set the header size to 25 * the board size because each block is 25 px
+      document.getElementById("header").style.width = this.board_size * 25 + 3 + "px";
 
       // creates an array of numbers from 0 to the number of boxes
-      var nums = Array.apply(null, { length: boxes }).map(Number.call, Number);
+      let nums = Array.apply(null, { length: boxes }).map(Number.call, Number);
 
-      var ranNums = [];
+      let ranNums = [];
 
       // the number of mines
-      var mines = Math.floor(boxes / this.difficulties[this.difficulty]);
+      let mines = Math.floor(boxes / this.difficulties[this.difficulty]);
       this.mines_left = mines;
       this.non_mines = boxes - mines;
 
       // select random numbers from nums. as many numbers as we need bombs
-      var j;
+      let j;
       while (mines > 0) {
         // generate a random number from 0 to nums.length-1
         j = Math.floor(Math.random() * (nums.length - 1));
@@ -194,21 +206,21 @@ var minesweeper = new Vue({
       this.mine_map = Array.apply(null, Array(boxes)).map(Number.prototype.valueOf, 0);
 
       // place the mines in the map
-      var k = 0;
+      let k = 0;
       while (k < ranNums.length) {
         this.mine_map[ranNums[k]] = -1;
         k++;
       }
 
       // calculate how many mines are touching each box
-      for (var x = 0; x < this.board_size; x++) {
-        for (var y = 0; y < this.board_size; y++) {
+      for (let x = 0; x < this.board_size; x++) {
+        for (let y = 0; y < this.board_size; y++) {
           this.mine_map[x * this.board_size + y] = this.touchingMines(x, y);
         }
       }
     }
   },
-  created: function() {
+  created() {
     this.initBoard();
   }
 });

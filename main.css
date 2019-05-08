@@ -1,4 +1,12 @@
-#minesweeper_header {
+body {
+  font-size: 15px;
+}
+
+#page-title {
+  padding: 30px;
+}
+
+#header {
   height: 55px;
   border: 2px solid black;
   background-color: silver;
@@ -8,18 +16,18 @@
   top: 1px;
 }
 
-#minesweeper_smile,
-#minesweeper_frown,
-#minesweeper_grin {
+#smile,
+#frown,
+#grin {
   color: yellow;
   background-color: black;
   border-radius: 50%;
   border: 1px solid black;
 }
 
-.minesweeper_box {
-  width: 30px;
-  height: 30px;
+.box {
+  width: 25px;
+  height: 25px;
   border: 1px solid black;
   background-color: silver;
   box-shadow: 0 0 1px 1px #666;
@@ -27,16 +35,25 @@
   text-align: center;
 }
 
-#minesweeper_mines_left {
+#mines_left {
   position: absolute;
 }
 
-#minesweeper_faces {
+#faces {
   text-align: center;
 }
 
-#minesweeper_timer {
+#timer {
   text-align: right;
+}
+
+.cross_out {
+  /* margin-left: -4px; */
+  background-image: url(cross_out.png);
+  background-size: 100%;
+  width: 22px;
+  height: 22px;
+  position: absolute;
 }
 
 .minesweeper_number {
