@@ -31,61 +31,63 @@ var minesweeper = new Vue({
   },
   methods: {
     display_box: function(x, y) {
+      // no clicking if we have won or lost
+      if (this.show_mines) {
+        return;
+      }
+
       if (this.interval === null) {
         this.startTimer();
       }
 
-      // no clicking if we have won or lost
-      if (!this.show_mines) {
-        let index = x * this.board_size + y;
+      let index = x * this.board_size + y;
 
-        // if we get off the board or click an already revealed box or a flag
-        if (this.mine_map[index] == undefined || this.revealed_map[index] != 0) {
-          return;
-        }
+      // if we get off the board or click an already revealed box or a flag
+      if (this.mine_map[index] == undefined || this.revealed_map[index] != 0) {
+        return;
+      }
 
-        // if we find a mine, put game into losing state
-        if (this.mine_map[index] == -1) {
+      // if we find a mine, put game into losing state
+      if (this.mine_map[index] == -1) {
+        clearInterval(this.interval);
+        this.interval = null;
+        document.getElementById("ind_" + x + "_" + y).style.color = "red";
+        this.show_mines = 1;
+        this.face = "frown";
+      } else {
+        // if it is not a mine, change the color and mark it as revealed
+        document.getElementById("ind_" + x + "_" + y).style["background-color"] = "#f0f0f0";
+        let map = this.revealed_map.slice(0);
+        map[index] = 1;
+        this.revealed_map = map;
+
+        // decrease the amount of non_mine boxes that the player has revealed. If it is all of them, the player won!
+        this.non_mines = this.non_mines - 1;
+        if (this.non_mines == 0) {
           clearInterval(this.interval);
           this.interval = null;
-          document.getElementById("ind_" + x + "_" + y).style.color = "red";
           this.show_mines = 1;
-          this.face = "frown";
-        } else {
-          // if it is not a mine, change the color and mark it as revealed
-          document.getElementById("ind_" + x + "_" + y).style["background-color"] = "#f0f0f0";
-          let map = this.revealed_map.slice(0);
-          map[index] = 1;
-          this.revealed_map = map;
+          this.face = "grin";
+        }
 
-          // decrease the amount of non_mine boxes that the player has revealed. If it is all of them, the player won!
-          this.non_mines = this.non_mines - 1;
-          if (this.non_mines == 0) {
-            clearInterval(this.interval);
-            this.interval = null;
-            this.show_mines = 1;
-            this.face = "grin";
+        // if the box clicked was a zero, reveal it's neighbors
+        if (this.mine_map[index] == 0) {
+          // the top and bottom neighbors
+          this.display_box(x - 1, y);
+          this.display_box(x + 1, y);
+
+          // the right neighbors if it is not a right edge
+          if (y + 1 < this.board_size) {
+            this.display_box(x, y + 1);
+            this.display_box(x - 1, y + 1);
+            this.display_box(x + 1, y + 1);
           }
 
-          // if the box clicked was a zero, reveal it's neighbors
-          if (this.mine_map[index] == 0) {
-            // the top and bottom neighbors
-            this.display_box(x - 1, y);
-            this.display_box(x + 1, y);
-
-            // the right neighbors if it is not a right edge
-            if (y + 1 < this.board_size) {
-              this.display_box(x, y + 1);
-              this.display_box(x - 1, y + 1);
-              this.display_box(x + 1, y + 1);
-            }
-
-            // the left neighbors if it is not a left edge
-            if (y - 1 >= 0) {
-              this.display_box(x, y - 1);
-              this.display_box(x + 1, y - 1);
-              this.display_box(x - 1, y - 1);
-            }
+          // the left neighbors if it is not a left edge
+          if (y - 1 >= 0) {
+            this.display_box(x, y - 1);
+            this.display_box(x + 1, y - 1);
+            this.display_box(x - 1, y - 1);
           }
         }
       }
