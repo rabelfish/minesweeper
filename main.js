@@ -22,8 +22,8 @@ var minesweeper = new Vue({
   },
   computed: {
     formatted_timer() {
-      let minutes = Math.floor(this.timer/60);
-      let seconds = this.timer - minutes*60;
+      let minutes = Math.floor(this.timer / 60);
+      let seconds = this.timer - minutes * 60;
       if (minutes < 10) minutes = "0" + minutes;
       if (seconds < 10) seconds = "0" + seconds;
       return minutes + ":" + seconds;
@@ -193,7 +193,7 @@ var minesweeper = new Vue({
       let boxes = this.board_size * this.board_size;
 
       // set the header size to 25 * the board size because each block is 25 px
-      document.getElementById("header").style.width = this.board_size * 25 + 3 + "px";
+      // document.getElementById("header").style.max_width = this.board_size * 25 + 4 + "px";
 
       // creates an array of numbers from 0 to the number of boxes
       let nums = Array.apply(null, { length: boxes }).map(Number.call, Number);

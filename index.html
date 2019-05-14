@@ -26,55 +26,55 @@
   </head>
 
   <body>
-    <div id="main" class="main row justify-content-center" role="main">
+    <div id="main" class="main" role="main">
       <!-- MAIN CONTENT -->
-      <div id="content" class="col-auto">
+      <div id="content">
         <div id="minesweeper">
-          <h1>
-            <div class="row justify-content-center" id="page_title">
-              <div class="col-2"><i class="fa fa-fw fa-gamepad float-right"></i></div>
-              <span class="col-auto"> MINESWEEPER </span>
-              <div class="col-2">
-                <a href="#" data-toggle="modal" data-target="#settings_modal"><i class="fa fa-fw fa-cog"> </i></a>
-              </div>
+          <h1 class="row justify-content-center" id="page_title">
+            <div class="col-2"><i class="fa fa-fw fa-gamepad float-right"></i></div>
+            <span class="col-auto"> MINESWEEPER </span>
+            <div class="col-2">
+              <a href="#" data-toggle="modal" data-target="#settings_modal"><i class="fa fa-fw fa-cog"> </i></a>
             </div>
           </h1>
-          <table>
-            <div id="header">
-              <div class="row">
-                <div class="col-4">
-                  <span id="mines_left">{{ mines_left }}</span>
+          <div v-cloak class="row justify-content-center">
+            <div class="col-auto">
+              <table>
+                <div id="header">
+                  <div class="row">
+                    <div class="col-4">
+                      <span id="mines_left">{{ mines_left }}</span>
+                    </div>
+                    <div class="col-4" id="faces">
+                      <i v-if="face == 'smile'" id="smile" class="fas fa-smile fa-3x"></i>
+                      <i v-if="face == 'frown'" id="frown" class="fas fa-frown fa-3x" @click="reset"></i>
+                      <i v-if="face == 'grin'" id="grin" class="fas fa-grin-beam fa-3x" @click="reset"></i>
+                    </div>
+                    <div class="col-4">
+                      <span id="timer">{{ formatted_timer }}</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-4" id="faces">
-                  <i v-if="face == 'smile'" id="smile" class="fas fa-smile fa-3x"></i>
-                  <i v-if="face == 'frown'" id="frown" class="fas fa-frown fa-3x" @click="reset"></i>
-                  <i v-if="face == 'grin'" id="grin" class="fas fa-grin-beam fa-3x" @click="reset"></i>
-                </div>
-                <div class="col-4">
-                    <span id="timer">{{ formatted_timer }}</span>
-                </div>
-              </div>
-            </div>
-            <tr v-for="(row, x) in board_size" :key="x">
-              <td
-                v-for="(col, y) in board_size"
-                :key="y"
-                class="box"
-                :id="'ind_' + x + '_' + y"
-                @click="display_box(x,y)"
-                @contextmenu.prevent="display_flag(x, y)"
-              >
-                <i
-                  v-if="show_mines && mine_map[x*board_size+y] === -1 && revealed_map[x*board_size+y] !== -1"
-                  class="fas fa-certificate"
-                ></i>
-                <span
-                  v-if="revealed_map[x*board_size+y] === 1 && mine_map[x*board_size+y] !== 0"
-                  class="minesweeper_number"
-                >
-                  <span
-                    class="minesweeper_number"
-                    :class="{ minesweeper_blue: mine_map[x*board_size+y] === 1,
+                <tr v-for="(row, x) in board_size" :key="x">
+                  <td
+                    v-for="(col, y) in board_size"
+                    :key="y"
+                    class="box"
+                    :id="'ind_' + x + '_' + y"
+                    @click="display_box(x,y)"
+                    @contextmenu.prevent="display_flag(x, y)"
+                  >
+                    <i
+                      v-if="show_mines && mine_map[x*board_size+y] === -1 && revealed_map[x*board_size+y] !== -1"
+                      class="fas fa-certificate"
+                    ></i>
+                    <span
+                      v-if="revealed_map[x*board_size+y] === 1 && mine_map[x*board_size+y] !== 0"
+                      class="minesweeper_number"
+                    >
+                      <span
+                        class="minesweeper_number"
+                        :class="{ minesweeper_blue: mine_map[x*board_size+y] === 1,
                                 minesweeper_green: mine_map[x*board_size+y] === 2,
                                 minesweeper_red: mine_map[x*board_size+y] === 3,
                                 minesweeper_yellow: mine_map[x*board_size+y] === 4,
@@ -82,26 +82,27 @@
                                 minesweeper_orange: mine_map[x*board_size+y] === 6,
                                 minesweeper_brown: mine_map[x*board_size+y] === 7,
                                 minesweeper_black: mine_map[x*board_size+y] === 8,}"
-                  >
-                    {{ mine_map[x * board_size + y] }}
-                  </span>
-                </span>
-                <i
-                  v-if="(revealed_map[x*board_size+y] === -1 && !show_mines) || (revealed_map[x*board_size+y] === -1 && mine_map[x*board_size+y] === -1 && show_mines)"
-                  class="fas fa-flag"
-                ></i>
-                <span v-if="show_mines && revealed_map[x*board_size+y] === -1 && mine_map[x*board_size+y] !== -1">
-                  <div class="cross_out"></div>
-                  <i class="fas fa-flag"></i>
-                </span>
-                <!-- <i
+                      >
+                        {{ mine_map[x * board_size + y] }}
+                      </span>
+                    </span>
+                    <i
+                      v-if="(revealed_map[x*board_size+y] === -1 && !show_mines) || (revealed_map[x*board_size+y] === -1 && mine_map[x*board_size+y] === -1 && show_mines)"
+                      class="fas fa-flag"
+                    ></i>
+                    <span v-if="show_mines && revealed_map[x*board_size+y] === -1 && mine_map[x*board_size+y] !== -1">
+                      <div class="cross_out"></div>
+                      <i class="fas fa-flag"></i>
+                    </span>
+                    <!-- <i
                   v-if="revealed_map[x*board_size+y] == -1 && show_mines && mine_map[x*board_size+y] != -1"
                   class="fas fa-certificate"
                 ></i> -->
-              </td>
-            </tr>
-          </table>
-
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
           <div
             class="modal fade"
             id="settings_modal"
@@ -122,7 +123,10 @@
                   <form>
                     <div class="form-group">
                       <label>Set Board Size </label>
-                      <input type="number" onKeyDown="return false;" v-model="new_board_size" min="10" max="50" />
+                      <input type="number" v-model="new_board_size" min="10" max="50" />
+                      <span v-if="new_board_size > 50 || new_board_size < 10" class="error"
+                        >Board Size must be an integer from 10 to 50!</span
+                      >
                     </div>
                     <div class="form-group">
                       <label>Choose Difficulty </label>
@@ -137,7 +141,13 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary"  data-dismiss="modal" @click="save_settings">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    :disabled="new_board_size > 50 || new_board_size < 10"
+                    data-dismiss="modal"
+                    @click="save_settings"
+                  >
                     Save changes (Restart Game)
                   </button>
                 </div>
